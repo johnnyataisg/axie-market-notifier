@@ -2,6 +2,7 @@ const validator = require("email-validator")
 const { prompt } = require("enquirer")
 const { GraphQLClient } = require("graphql-request")
 const schedule = require("node-schedule")
+const { truncateDb } = require("./job.js")
 const { calculateGeneScore, getCompleteGeneMap } = require("./genes/index.js")
 const { GET_LISTED_AXIES_WITH_CRITERIA } = require("./graphql/query.js")
 const { sendNotification } = require("./sender/index.js")
@@ -132,10 +133,12 @@ async function main() {
         }
     ])
 
-    schedule.scheduleJob("*/30 * * * * *", async () => {
+    schedule.scheduleJob("*/1 * * * *", async () => {
         const foundAxies = await searchAxies(userInput)
         await sendNotification(userInput.email, foundAxies)
     })
+
+    schedule.scheduleJob("8 * * *", truncateDb)
 }
 
 main()
