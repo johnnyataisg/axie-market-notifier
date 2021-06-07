@@ -38,7 +38,7 @@ async function updateSentAxieIds(email, axieIds) {
 
 module.exports.sendNotification = async function(email, axies) {
     const cachedAxieIds = (await getSentAxieIds(email)).axieIds
-    const axieIdsToBeSent = axies.filter(axie => !cachedAxieIds.includes(axie.id)).map(axie => `https://marketplace.axieinfinity.com/axie/${axie.id}`)
+    const axieIdsToBeSent = axies.filter(axie => !cachedAxieIds.includes(axie.id)).map(axie => axie.id)
     
     try {
         if (axieIdsToBeSent.length > 0) {
@@ -46,10 +46,10 @@ module.exports.sendNotification = async function(email, axies) {
                 from: "axiemarketnotifier@gmail.com",
                 to: email,
                 subject: "Axie Marketplace Notifier",
-                text: JSON.stringify(axieIdsToBeSent)
+                text: JSON.stringify(axieIdsToBeSent.map(id => `https://marketplace.axieinfinity.com/axie/${id}`))
             })
             console.log(`Successfully notified ${email} of axie listings.`)
-            await updateSentAxieIds(email, axies.map(axie => axie.id))
+            await updateSentAxieIds(email, axieIdsToBeSent.concat(cachedAxieIds))
         }
     } catch (error) {
         console.log("Notification delivery unsuccessful.")
