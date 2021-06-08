@@ -62,8 +62,8 @@ async function searchAxies(userInput) {
         })
         return filteredAxies
     } catch (error) {
-        console.log("Axie infinity servers are having problems.")
-        process.kill(process.pid, "SIGINT")
+        console.log("Axie infinity servers are having problems. Retrying in 30 seconds.")
+        return []
     }
 }
 
