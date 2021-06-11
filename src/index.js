@@ -138,7 +138,7 @@ async function main() {
         await sendNotification(userInput.email, foundAxies)
     })
 
-    schedule.scheduleJob("0 0 8 * * *", truncateDb)
+    // schedule.scheduleJob("0 0 8 * * *", truncateDb)
 }
 
 main()
